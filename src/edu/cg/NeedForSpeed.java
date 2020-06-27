@@ -41,6 +41,8 @@ public class NeedForSpeed implements GLEventListener {
 	// - Different camera settings
 	// - Light colors
 	// Or in short anything reusable - this make it easier for your to keep track of your implementation.
+	private double carScale = 0.0;
+	private double[] carInitialPosition;
 	
 	public NeedForSpeed(Component glPanel) {
 		this.glPanel = glPanel;
@@ -48,6 +50,8 @@ public class NeedForSpeed implements GLEventListener {
 		gameTrack = new Track();
 		carCameraTranslation = new Vec(0.0);
 		car = new F1Car();
+		carScale = 5.0;
+		carInitialPosition = new double[]{0.0,this.carScale*0.06,this.carScale*(-0.120)};
 	}
 
 	@Override
@@ -90,10 +94,41 @@ public class NeedForSpeed implements GLEventListener {
 	 * @return Checks if the car intersects the one of the boxes on the track.
 	 */
 	private boolean checkCollision() {
-		// TODO: Implement this function to check if the car collides into one of the boxes.
-		// You can get the bounding spheres of the track by invoking: 
-		// List<BoundingSphere> trackBoundingSpheres = gameTrack.getBoundingSpheres();
-		return false;
+		// You can get the bounding spheres of the track by invoking:
+		List<BoundingSphere> trackBoundingSpheres = gameTrack.getBoundingSpheres();
+		List<BoundingSphere> carBoundingSpheres = car.getBoundingSpheres();
+		boolean isIntersect = false;
+
+		//set each part of the car position.
+		double dx,dy,dz;
+		for (BoundingSphere carSpherePart : carBoundingSpheres){
+			//scale the radius
+			carSpherePart.setRadius(carSpherePart.getRadius() * carScale);
+			double degreeToRotate = 90.0 + this.gameState.getCarRotation();
+			carSpherePart.rotateTheCenterToY(degreeToRotate);
+			//translate the center point
+			dx = this.carInitialPosition[0] * this.carCameraTranslation.x;
+			dy = this.carInitialPosition[1] * this.carCameraTranslation.y;
+			dz = this.carInitialPosition[2] * this.carCameraTranslation.z;
+			carSpherePart.translateCenter(dx,dy,dz);
+		}
+
+		//check if the car collides into one of the boxes.
+		BoundingSphere wholeCar,frontCar,centerCar, backCar;
+		for (BoundingSphere boxInTrack : trackBoundingSpheres){
+			wholeCar = carBoundingSpheres.get(0);
+			frontCar = carBoundingSpheres.get(1);
+			centerCar = carBoundingSpheres.get(2);
+			backCar = carBoundingSpheres.get(3);
+			boolean isIntersectWholeCar = boxInTrack.checkIntersection(wholeCar);
+			if (isIntersectWholeCar){
+				if (boxInTrack.checkIntersection(frontCar) || boxInTrack.checkIntersection(centerCar) || boxInTrack.checkIntersection(backCar)){
+					isIntersect = true;
+				}
+			}
+		}
+
+		return isIntersect;
 	}
 
 	private void updateCarCameraTranslation(GL2 gl) {
