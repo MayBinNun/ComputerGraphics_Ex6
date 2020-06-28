@@ -180,12 +180,8 @@ public class NeedForSpeed implements GLEventListener {
 		gl.glPopMatrix();
 	}
 
+
 	private void renderCar(GL2 gl) {
-		// TODO: Render the car.
-		// * Remember: the car position should be the initial position + the accumulated translation.
-		//             This will simulate the car movement.
-		// * Remember: the car was modeled locally, you may need to rotate/scale and translate the car appropriately.
-		// * Recommendation: it is recommended to define fields (such as car initial position) that can be used during rendering.
 		double dx,dy,dz;
 		double newCarRotation = 90.0 - this.gameState.getCarRotation();
 		dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
