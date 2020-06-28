@@ -107,9 +107,9 @@ public class NeedForSpeed implements GLEventListener {
 			double degreeToRotate = 90.0 + this.gameState.getCarRotation();
 			carSpherePart.rotateTheCenterToY(degreeToRotate);
 			//translate the center point
-			dx = this.carInitialPosition[0] * this.carCameraTranslation.x;
-			dy = this.carInitialPosition[1] * this.carCameraTranslation.y;
-			dz = this.carInitialPosition[2] * this.carCameraTranslation.z;
+			dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
+			dy = this.carInitialPosition[1] + this.carCameraTranslation.y;
+			dz = this.carInitialPosition[2] + this.carCameraTranslation.z;
 			carSpherePart.translateCenter(dx,dy,dz);
 		}
 
@@ -149,15 +149,15 @@ public class NeedForSpeed implements GLEventListener {
     private void setupCamera(GL2 gl) {
         GLU glu = new GLU();
         double dx,dy,dz;
-        dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
+        dx = this.carCameraTranslation.x;
         if (isBirdseyeView) {
-            dy = 53.0 + this.carCameraTranslation.y;
-            dz = this.carInitialPosition[2] - 21.0 + this.carCameraTranslation.z;
-            glu.gluLookAt(dx, dy, dz, dx, dy - 1.0, dz, 0.0, 0.0, -1.0);
+            dy = this.carCameraTranslation.y;
+            dz = this.carCameraTranslation.z -40.0;
+            glu.gluLookAt(dx, dy+50, dz, dx, dy, dz, 0.0, 0.0, -1.0);
         } else {
-            dy = 3.0 + this.carCameraTranslation.y;
-            dz = this.carInitialPosition[2] + this.carCameraTranslation.z + 2;
-            glu.gluLookAt(dx, dy, dz, dx, dy, dz - 12.0, 0.0, 1.0, 0.0);
+            dy = this.carCameraTranslation.y;
+            dz = this.carCameraTranslation.z + 4.0;
+            glu.gluLookAt(dx, dy+2, dz, dx, dy-2, dz - 10.0, 0.0, 1.0, 0.0);
         }
 	}
 
