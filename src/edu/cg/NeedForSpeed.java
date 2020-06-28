@@ -43,7 +43,7 @@ public class NeedForSpeed implements GLEventListener {
 	// Or in short anything reusable - this make it easier for your to keep track of your implementation.
 	private double carScale = 0.0;
 	private double[] carInitialPosition;
-	
+
 	public NeedForSpeed(Component glPanel) {
 		this.glPanel = glPanel;
 		gameState = new GameState();
@@ -54,41 +54,41 @@ public class NeedForSpeed implements GLEventListener {
 		carInitialPosition = new double[]{0.0,this.carScale*0.06,this.carScale*(-0.120)};
 	}
 
-	@Override
-	public void display(GLAutoDrawable drawable) {
-		GL2 gl = drawable.getGL().getGL2();
-		if (!isModelInitialized) {
-			initModel(gl);
-		}
-		if (isDayMode) {
-			// TODO: Setup background when day mode is on
-			// use gl.glClearColor() function.
-		} else {
-			// TODO: Setup background when night mode is on
-		}
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		// TODO: This is the flow in which we render the scene.
-		// Step (1) Update the accumulated translation that needs to be
-		// applied on the car, camera and light sources.
-		updateCarCameraTranslation(gl);
-		// Step (2) Position the camera and setup its orientation
-		setupCamera(gl);
-		// Step (3) setup the lights.
-		setupLights(gl);
-		// Step (4) render the car.
-		renderCar(gl);
-		// Step (5) render the track.
-		renderTrack(gl);
-		// Step (6) check collision. Note this has nothing to do with OpenGL.
-		if (checkCollision()) {
-			JOptionPane.showMessageDialog(this.glPanel, "Game is Over");
-			this.gameState.resetGameState();
-			this.carCameraTranslation = new Vec(0.0);
-		}
+    @Override
+    public void display(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+        if (!isModelInitialized) {
+            initModel(gl);
+        }
+        if (isDayMode) {
+            gl.glClearColor(0.5f, 0.5f, 1.0f, 1.0f);
+        } else {
+            gl.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 
-	}
+        }
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glLoadIdentity();
+        // TODO: This is the flow in which we render the scene.
+        // Step (1) Update the accumulated translation that needs to be
+        // applied on the car, camera and light sources.
+        updateCarCameraTranslation(gl);
+        // Step (2) Position the camera and setup its orientation
+        setupCamera(gl);
+        // Step (3) setup the lights.
+        setupLights(gl);
+        // Step (4) render the car.
+        renderCar(gl);
+        // Step (5) render the track.
+        renderTrack(gl);
+        // Step (6) check collision. Note this has nothing to do with OpenGL.
+        if (checkCollision()) {
+            JOptionPane.showMessageDialog(this.glPanel, "Game is Over");
+            this.gameState.resetGameState();
+            this.carCameraTranslation = new Vec(0.0);
+        }
+
+    }
 
 	/**
 	 * @return Checks if the car intersects the one of the boxes on the track.
@@ -131,43 +131,45 @@ public class NeedForSpeed implements GLEventListener {
 		return isIntersect;
 	}
 
-	private void updateCarCameraTranslation(GL2 gl) {
-		// Update the car and camera translation values (not the ModelView-Matrix).
-		// - Always keep track of the car offset relative to the starting
-		// point.
-		// - Change the track segments here.
-		Vec ret = gameState.getNextTranslation();
-		carCameraTranslation = carCameraTranslation.add(ret);
-		double dx = Math.max(carCameraTranslation.x, -TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 - 2);
-		carCameraTranslation.x = (float) Math.min(dx, TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 + 2);
-		if (Math.abs(carCameraTranslation.z) >= TrackSegment.TRACK_LENGTH + 10.0) {
-			carCameraTranslation.z = -(float) (Math.abs(carCameraTranslation.z) % TrackSegment.TRACK_LENGTH);
-			gameTrack.changeTrack(gl);
-		}
+    private void updateCarCameraTranslation(GL2 gl) {
+        // Update the car and camera translation values (not the ModelView-Matrix).
+        // - Always keep track of the car offset relative to the starting
+        // point.
+        // - Change the track segments here.
+        Vec ret = gameState.getNextTranslation();
+        carCameraTranslation = carCameraTranslation.add(ret);
+        double dx = Math.max(carCameraTranslation.x, -TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 - 2);
+        carCameraTranslation.x = (float) Math.min(dx, TrackSegment.ASPHALT_TEXTURE_DEPTH / 2.0 + 2);
+        if (Math.abs(carCameraTranslation.z) >= TrackSegment.TRACK_LENGTH + 10.0) {
+            carCameraTranslation.z = -(float) (Math.abs(carCameraTranslation.z) % TrackSegment.TRACK_LENGTH);
+            gameTrack.changeTrack(gl);
+        }
+    }
+
+    private void setupCamera(GL2 gl) {
+        // TODO: You are advised to use :
+        GLU glu = new GLU();
+        if (isBirdseyeView) {
+            // TODO Setup camera for Birds-eye view
+        } else {
+            glu.gluLookAt(0.0, 2.0, 0.0,
+                    0.0, 2.0, -1.0,
+                    0.0, 1.0, 0.0);
+            // TODO Setup camera for Third-person view
+        }
+
 	}
 
-	private void setupCamera(GL2 gl) {
-		// TODO: You are advised to use :
-		//       GLU glu = new GLU();
-		//       glu.gluLookAt();
-		if (isBirdseyeView) {
-			// TODO Setup camera for Birds-eye view
-		} else {
-			// TODO Setup camera for Third-person view
-		}
-
-	}
-
-	private void setupLights(GL2 gl) {
-		if (isDayMode) {
-			// TODO Setup day lighting.
-			// * Remember: switch-off any light sources that were used in night mode and are not use in day mode.
-		} else {
-			// TODO Setup night lighting.
-			// * Remember: switch-off any light sources that are used in day mode
-			// * Remember: spotlight sources also move with the camera.
-			// * You may simulate moon-light using ambient light.
-		}
+    private void setupLights(GL2 gl) {
+        if (isDayMode) {
+            // TODO Setup day lighting.
+            // * Remember: switch-off any light sources that were used in night mode and are not use in day mode.
+        } else {
+            // TODO Setup night lighting.
+            // * Remember: switch-off any light sources that are used in day mode
+            // * Remember: spotlight sources also move with the camera.
+            // * You may simulate moon-light using ambient light.
+        }
 
 	}
 
@@ -200,68 +202,82 @@ public class NeedForSpeed implements GLEventListener {
 		gl.glPopMatrix();
 	}
 
-	public GameState getGameState() {
-		return gameState;
-	}
+    public GameState getGameState() {
+        return gameState;
+    }
 
-	@Override
-	public void dispose(GLAutoDrawable drawable) {
-	}
+    @Override
+    public void dispose(GLAutoDrawable drawable) {
+    }
 
-	@Override
-	public void init(GLAutoDrawable drawable) {
-		GL2 gl = drawable.getGL().getGL2();
+    @Override
+    public void init(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
 
-		// Initialize display callback timer
-		ani = new FPSAnimator(30, true);
-		ani.add(drawable);
-		glPanel.repaint();
+        // Initialize display callback timer
+        ani = new FPSAnimator(30, true);
+        ani.add(drawable);
+        glPanel.repaint();
 
-		initModel(gl);
-		ani.start();
-	}
+        initModel(gl);
+        ani.start();
+    }
 
-	public void initModel(GL2 gl) {
-		gl.glCullFace(GL2.GL_BACK);
-		gl.glEnable(GL2.GL_CULL_FACE);
+    public void initModel(GL2 gl) {
+        gl.glCullFace(GL2.GL_BACK);
+        gl.glEnable(GL2.GL_CULL_FACE);
 
-		gl.glEnable(GL2.GL_NORMALIZE);
-		gl.glEnable(GL2.GL_DEPTH_TEST);
-		gl.glEnable(GL2.GL_LIGHTING);
-		gl.glEnable(GL2.GL_SMOOTH);
+        gl.glEnable(GL2.GL_NORMALIZE);
+        gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glEnable(GL2.GL_LIGHTING);
+        gl.glEnable(GL2.GL_SMOOTH);
 
-		car.init(gl);
-		gameTrack.init(gl);
-		isModelInitialized = true;
-	}
+        car.init(gl);
+        gameTrack.init(gl);
+        isModelInitialized = true;
+    }
 
-	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		// TODO Setup the projection matrix here.
-	}
+    @Override
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glLoadIdentity();
+        GLU glu = new GLU();
+        double aspect = width / height;
 
-	/**
-	 * Start redrawing the scene with 30 FPS
-	 */
-	public void startAnimation() {
-		if (!ani.isAnimating())
-			ani.start();
-	}
+        if (this.isBirdseyeView) {
+            glu.gluPerspective(60.0, aspect, 2.0, 500.0);
 
-	/**
-	 * Stop redrawing the scene with 30 FPS
-	 */
-	public void stopAnimation() {
-		if (ani.isAnimating())
-			ani.stop();
-	}
+        } else {
+            glu.gluPerspective(60.0, aspect, 2.0, 500.0);
 
-	public void toggleNightMode() {
-		isDayMode = !isDayMode;
-	}
+        }
 
-	public void changeViewMode() {
-		isBirdseyeView = !isBirdseyeView;
-	}
+
+    }
+
+    /**
+     * Start redrawing the scene with 30 FPS
+     */
+    public void startAnimation() {
+        if (!ani.isAnimating())
+            ani.start();
+    }
+
+    /**
+     * Stop redrawing the scene with 30 FPS
+     */
+    public void stopAnimation() {
+        if (ani.isAnimating())
+            ani.stop();
+    }
+
+    public void toggleNightMode() {
+        isDayMode = !isDayMode;
+    }
+
+    public void changeViewMode() {
+        isBirdseyeView = !isBirdseyeView;
+    }
 
 }
