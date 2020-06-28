@@ -37,7 +37,6 @@ public class NeedForSpeed implements GLEventListener {
     // - Different camera settings
     // - Light colors
     // Or in short anything reusable - this make it easier for your to keep track of your implementation.
-    private double carScale = 0.0;
     private double[] carInitialPosition;
 
     public NeedForSpeed(Component glPanel) {
@@ -46,8 +45,7 @@ public class NeedForSpeed implements GLEventListener {
         gameTrack = new Track();
         carCameraTranslation = new Vec(0.0);
         car = new F1Car();
-        carScale = 5.0;
-        carInitialPosition = new double[]{0.0, this.carScale * 0.06, this.carScale * (-0.120)};
+        carInitialPosition = new double[]{0.0, 0.4, -6.0};
     }
 
     @Override
@@ -99,7 +97,7 @@ public class NeedForSpeed implements GLEventListener {
 		double dx,dy,dz;
 		for (BoundingSphere carSpherePart : carBoundingSpheres){
 			//scale the radius
-			carSpherePart.setRadius(carSpherePart.getRadius() * carScale);
+			carSpherePart.setRadius(carSpherePart.getRadius() * 4.0);
 			double degreeToRotate = 90.0 + this.gameState.getCarRotation();
 			carSpherePart.rotateTheCenterToY(degreeToRotate);
 			//translate the center point
@@ -149,13 +147,13 @@ public class NeedForSpeed implements GLEventListener {
         ctx = this.carCameraTranslation.x;
 
         if (isBirdseyeView) {
-            cty = this.carCameraTranslation.y + 50.0;
+            cty = this.carCameraTranslation.y;
             crz = this.carCameraTranslation.z -22;
-            glu.gluLookAt(ctx, cty, crz, ctx, cty-10.0, crz, 0.0, 0.0, -1.0);
+            glu.gluLookAt(ctx, cty+37.0, crz, ctx, cty-10.0, crz, 0.0, 0.0, -1.0);
         } else {
-            cty = this.carCameraTranslation.y + 2.0;
+            cty = this.carCameraTranslation.y + 6.0;
             crz = this.carCameraTranslation.z + 6.0;
-            glu.gluLookAt(ctx, cty, crz, ctx, cty, crz - 10.0, 0.0, 1.0, 0.0);
+            glu.gluLookAt(ctx, cty, crz, ctx, cty-3.0, crz - 15.0, 0.0, 1.0, 0.0);
         }
     }
 
@@ -200,7 +198,7 @@ public class NeedForSpeed implements GLEventListener {
         gl.glTranslated(dx, dy, dz);
         //rotate and scale the car
         gl.glRotated(newCarRotation, 0.0, 1.0, 0.0);
-        gl.glScaled(this.carScale, this.carScale, this.carScale);
+        gl.glScaled(4.0,4.0,4.0);
         this.car.render(gl);
 
         gl.glPopMatrix();
