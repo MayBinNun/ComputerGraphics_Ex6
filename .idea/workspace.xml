@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3fdee408-bc31-4ef7-a849-0fc27824ed61" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Ex6/edu/cg/NeedForSpeed.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ex6/edu/cg/NeedForSpeed.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/edu/cg/NeedForSpeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/edu/cg/NeedForSpeed.java" afterDir="false" />
@@ -66,6 +67,18 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -112,14 +125,6 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state width="1237" height="245" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1593337393206" />
-    <state x="121" y="51" key="MergeDialog" timestamp="1593341403694">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="121" y="51" key="MergeDialog/0.0.1280.680@0.0.1280.680" timestamp="1593341403694" />
-    <state x="354" y="57" key="MultipleFileMergeDialog" timestamp="1593341403707">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="354" y="57" key="MultipleFileMergeDialog/0.0.1280.680@0.0.1280.680" timestamp="1593341403706" />
     <state x="121" y="0" key="SettingsEditor" timestamp="1593257357835">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
