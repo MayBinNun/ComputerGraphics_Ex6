@@ -1,58 +1,54 @@
 package edu.cg;
 
-import java.awt.Component;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
-
 import edu.cg.algebra.Vec;
 import edu.cg.models.BoundingSphere;
+import edu.cg.models.Car.F1Car;
 import edu.cg.models.Track;
 import edu.cg.models.TrackSegment;
-import edu.cg.models.Car.F1Car;
-import edu.cg.models.Car.Specification;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 
 /**
  * An OpenGL 3D Game.
- *
  */
 public class NeedForSpeed implements GLEventListener {
-	private GameState gameState = null; // Tracks the car movement and orientation
-	private F1Car car = null; // The F1 car we want to render
-	private Vec carCameraTranslation = null; // The accumulated translation that should be applied on the car, camera
-												// and light sources
-	private Track gameTrack = null; // The game track we want to render
-	private FPSAnimator ani; // This object is responsible to redraw the model with a constant FPS
-	private Component glPanel; // The canvas we draw on.
-	private boolean isModelInitialized = false; // Whether model.init() was called.
-	private boolean isDayMode = true; // Indicates whether the lighting mode is day/night.
-	private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
-											// looking
-	// towards the car direction.
-	// TODO: add fields as you want. For example:
-	// - Car initial position (should be fixed).
-	// - Camera initial position (should be fixed)
-	// - Different camera settings
-	// - Light colors
-	// Or in short anything reusable - this make it easier for your to keep track of your implementation.
-	private double carScale = 0.0;
-	private double[] carInitialPosition;
+    private GameState gameState = null; // Tracks the car movement and orientation
+    private F1Car car = null; // The F1 car we want to render
+    private Vec carCameraTranslation = null; // The accumulated translation that should be applied on the car, camera
+    // and light sources
+    private Track gameTrack = null; // The game track we want to render
+    private FPSAnimator ani; // This object is responsible to redraw the model with a constant FPS
+    private Component glPanel; // The canvas we draw on.
+    private boolean isModelInitialized = false; // Whether model.init() was called.
+    private boolean isDayMode = true; // Indicates whether the lighting mode is day/night.
+    private boolean isBirdseyeView = false; // Indicates whether the camera is looking from above on the scene or
+    // looking
+    // towards the car direction.
+    // TODO: add fields as you want. For example:
+    // - Car initial position (should be fixed).
+    // - Camera initial position (should be fixed)
+    // - Different camera settings
+    // - Light colors
+    // Or in short anything reusable - this make it easier for your to keep track of your implementation.
+    private double carScale = 0.0;
+    private double[] carInitialPosition;
 
-	public NeedForSpeed(Component glPanel) {
-		this.glPanel = glPanel;
-		gameState = new GameState();
-		gameTrack = new Track();
-		carCameraTranslation = new Vec(0.0);
-		car = new F1Car();
-		carScale = 5.0;
-		carInitialPosition = new double[]{0.0,this.carScale*0.06,this.carScale*(-0.120)};
-	}
+    public NeedForSpeed(Component glPanel) {
+        this.glPanel = glPanel;
+        gameState = new GameState();
+        gameTrack = new Track();
+        carCameraTranslation = new Vec(0.0);
+        car = new F1Car();
+        carScale = 5.0;
+        carInitialPosition = new double[]{0.0, this.carScale * 0.06, this.carScale * (-0.120)};
+    }
 
     @Override
     public void display(GLAutoDrawable drawable) {
@@ -90,46 +86,46 @@ public class NeedForSpeed implements GLEventListener {
 
     }
 
-	/**
-	 * @return Checks if the car intersects the one of the boxes on the track.
-	 */
-	private boolean checkCollision() {
-		// You can get the bounding spheres of the track by invoking:
-		List<BoundingSphere> trackBoundingSpheres = gameTrack.getBoundingSpheres();
-		List<BoundingSphere> carBoundingSpheres = car.getBoundingSpheres();
-		boolean isIntersect = false;
+    /**
+     * @return Checks if the car intersects the one of the boxes on the track.
+     */
+    private boolean checkCollision() {
+        // You can get the bounding spheres of the track by invoking:
+        List<BoundingSphere> trackBoundingSpheres = gameTrack.getBoundingSpheres();
+        List<BoundingSphere> carBoundingSpheres = car.getBoundingSpheres();
+        boolean isIntersect = false;
 
-		//set each part of the car position.
-		double dx,dy,dz;
-		for (BoundingSphere carSpherePart : carBoundingSpheres){
-			//scale the radius
-			carSpherePart.setRadius(carSpherePart.getRadius() * carScale);
-			double degreeToRotate = 90.0 + this.gameState.getCarRotation();
-			carSpherePart.rotateTheCenterToY(degreeToRotate);
-			//translate the center point
-			dx = this.carInitialPosition[0] * this.carCameraTranslation.x;
-			dy = this.carInitialPosition[1] * this.carCameraTranslation.y;
-			dz = this.carInitialPosition[2] * this.carCameraTranslation.z;
-			carSpherePart.translateCenter(dx,dy,dz);
-		}
+        //set each part of the car position.
+        double dx, dy, dz;
+        for (BoundingSphere carSpherePart : carBoundingSpheres) {
+            //scale the radius
+            carSpherePart.setRadius(carSpherePart.getRadius() * carScale);
+            double degreeToRotate = 90.0 + this.gameState.getCarRotation();
+            carSpherePart.rotateTheCenterToY(degreeToRotate);
+            //translate the center point
+            dx = this.carInitialPosition[0] * this.carCameraTranslation.x;
+            dy = this.carInitialPosition[1] * this.carCameraTranslation.y;
+            dz = this.carInitialPosition[2] * this.carCameraTranslation.z;
+            carSpherePart.translateCenter(dx, dy, dz);
+        }
 
-		//check if the car collides into one of the boxes.
-		BoundingSphere wholeCar,frontCar,centerCar, backCar;
-		for (BoundingSphere boxInTrack : trackBoundingSpheres){
-			wholeCar = carBoundingSpheres.get(0);
-			frontCar = carBoundingSpheres.get(1);
-			centerCar = carBoundingSpheres.get(2);
-			backCar = carBoundingSpheres.get(3);
-			boolean isIntersectWholeCar = boxInTrack.checkIntersection(wholeCar);
-			if (isIntersectWholeCar){
-				if (boxInTrack.checkIntersection(frontCar) || boxInTrack.checkIntersection(centerCar) || boxInTrack.checkIntersection(backCar)){
-					isIntersect = true;
-				}
-			}
-		}
+        //check if the car collides into one of the boxes.
+        BoundingSphere wholeCar, frontCar, centerCar, backCar;
+        for (BoundingSphere boxInTrack : trackBoundingSpheres) {
+            wholeCar = carBoundingSpheres.get(0);
+            frontCar = carBoundingSpheres.get(1);
+            centerCar = carBoundingSpheres.get(2);
+            backCar = carBoundingSpheres.get(3);
+            boolean isIntersectWholeCar = boxInTrack.checkIntersection(wholeCar);
+            if (isIntersectWholeCar) {
+                if (boxInTrack.checkIntersection(frontCar) || boxInTrack.checkIntersection(centerCar) || boxInTrack.checkIntersection(backCar)) {
+                    isIntersect = true;
+                }
+            }
+        }
 
-		return isIntersect;
-	}
+        return isIntersect;
+    }
 
     private void updateCarCameraTranslation(GL2 gl) {
         // Update the car and camera translation values (not the ModelView-Matrix).
@@ -148,7 +144,7 @@ public class NeedForSpeed implements GLEventListener {
 
     private void setupCamera(GL2 gl) {
         GLU glu = new GLU();
-        double dx,dy,dz;
+        double dx, dy, dz;
         dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
         if (isBirdseyeView) {
             dy = 53.0 + this.carCameraTranslation.y;
@@ -159,11 +155,22 @@ public class NeedForSpeed implements GLEventListener {
             dz = this.carInitialPosition[2] + this.carCameraTranslation.z + 2;
             glu.gluLookAt(dx, dy, dz, dx, dy, dz - 12.0, 0.0, 1.0, 0.0);
         }
-	}
+    }
 
     private void setupLights(GL2 gl) {
         if (isDayMode) {
-            // TODO Setup night lighting.
+            float[] colorOfSun = {1.0f, 1.0f, 1.0f, 1.0f};
+            Vec sunDirection = new Vec(0.0, 1.0, 1.0).normalize();
+            gl.glDisable(16385);
+            int sunLight = 16385;
+
+
+            final float[] position = {sunDirection.x, sunDirection.y, sunDirection.z, 0.0f};
+            gl.glLightfv(sunLight, 4610, colorOfSun, 0);
+            gl.glLightfv(sunLight, 4609, colorOfSun, 0);
+            gl.glLightfv(sunLight, 4611, position, 0);
+            gl.glLightfv(sunLight, 4608, colorOfSun, 0);
+            gl.glEnable(sunLight);
         } else {
             // TODO Setup night lighting.
             // * Remember: switch-off any light sources that are used in day mode
@@ -171,31 +178,31 @@ public class NeedForSpeed implements GLEventListener {
             // * You may simulate moon-light using ambient light.
         }
 
-	}
+    }
 
-	private void renderTrack(GL2 gl) {
-		// * Note: the track is not translated. It should be fixed.
-		gl.glPushMatrix();
-		gameTrack.render(gl);
-		gl.glPopMatrix();
-	}
+    private void renderTrack(GL2 gl) {
+        // * Note: the track is not translated. It should be fixed.
+        gl.glPushMatrix();
+        gameTrack.render(gl);
+        gl.glPopMatrix();
+    }
 
-	private void renderCar(GL2 gl) {
-		double dx,dy,dz;
-		double newCarRotation = 90.0 - this.gameState.getCarRotation();
-		dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
-		dy = this.carInitialPosition[1] + this.carCameraTranslation.y;
-		dz = this.carInitialPosition[2] + this.carCameraTranslation.z;
-		gl.glPushMatrix();
+    private void renderCar(GL2 gl) {
+        double dx, dy, dz;
+        double newCarRotation = 90.0 - this.gameState.getCarRotation();
+        dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
+        dy = this.carInitialPosition[1] + this.carCameraTranslation.y;
+        dz = this.carInitialPosition[2] + this.carCameraTranslation.z;
+        gl.glPushMatrix();
 
-		gl.glTranslated(dx,dy,dz);
-		//rotate and scale the car
-		gl.glRotated(newCarRotation, 0.0, 1.0, 0.0);
-		gl.glScaled(this.carScale, this.carScale, this.carScale);
-		this.car.render(gl);
+        gl.glTranslated(dx, dy, dz);
+        //rotate and scale the car
+        gl.glRotated(newCarRotation, 0.0, 1.0, 0.0);
+        gl.glScaled(this.carScale, this.carScale, this.carScale);
+        this.car.render(gl);
 
-		gl.glPopMatrix();
-	}
+        gl.glPopMatrix();
+    }
 
     public GameState getGameState() {
         return gameState;
