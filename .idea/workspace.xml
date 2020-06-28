@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3fdee408-bc31-4ef7-a849-0fc27824ed61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Ex6/edu/cg/NeedForSpeed.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ex6/edu/cg/NeedForSpeed.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Ex6/edu/cg/models/BoundingSphere.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ex6/edu/cg/models/BoundingSphere.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/edu/cg/NeedForSpeed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/edu/cg/NeedForSpeed.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
