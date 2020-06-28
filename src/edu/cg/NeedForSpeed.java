@@ -162,8 +162,7 @@ public class NeedForSpeed implements GLEventListener {
 
     private void setupLights(GL2 gl) {
         if (isDayMode) {
-            // TODO Setup day lighting.
-            // * Remember: switch-off any light sources that were used in night mode and are not use in day mode.
+            // TODO Setup night lighting.
         } else {
             // TODO Setup night lighting.
             // * Remember: switch-off any light sources that are used in day mode
@@ -180,27 +179,13 @@ public class NeedForSpeed implements GLEventListener {
 		gl.glPopMatrix();
 	}
 
-	private void renderCar(GL2 gl) {
-		// TODO: Render the car.
-		// * Remember: the car position should be the initial position + the accumulated translation.
-		//             This will simulate the car movement.
-		// * Remember: the car was modeled locally, you may need to rotate/scale and translate the car appropriately.
-		// * Recommendation: it is recommended to define fields (such as car initial position) that can be used during rendering.
-		double dx,dy,dz;
-		double newCarRotation = 90.0 - this.gameState.getCarRotation();
-		dx = this.carInitialPosition[0] + this.carCameraTranslation.x;
-		dy = this.carInitialPosition[1] + this.carCameraTranslation.y;
-		dz = this.carInitialPosition[2] + this.carCameraTranslation.z;
-		gl.glPushMatrix();
-
-		gl.glTranslated(dx,dy,dz);
-		//rotate and scale the car
-		gl.glRotated(newCarRotation, 0.0, 1.0, 0.0);
-		gl.glScaled(this.carScale, this.carScale, this.carScale);
-		this.car.render(gl);
-
-		gl.glPopMatrix();
-	}
+    private void renderCar(GL2 gl) {
+        // TODO: Render the car.
+        // * Remember: the car position should be the initial position + the accumulated translation.
+        //             This will simulate the car movement.
+        // * Remember: the car was modeled locally, you may need to rotate/scale and translate the car appropriately.
+        // * Recommendation: it is recommended to define fields (such as car initial position) that can be used during rendering.
+    }
 
     public GameState getGameState() {
         return gameState;
