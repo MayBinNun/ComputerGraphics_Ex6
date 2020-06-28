@@ -162,8 +162,7 @@ public class NeedForSpeed implements GLEventListener {
 
     private void setupLights(GL2 gl) {
         if (isDayMode) {
-            // TODO Setup day lighting.
-            // * Remember: switch-off any light sources that were used in night mode and are not use in day mode.
+            // TODO Setup night lighting.
         } else {
             // TODO Setup night lighting.
             // * Remember: switch-off any light sources that are used in day mode
@@ -179,7 +178,6 @@ public class NeedForSpeed implements GLEventListener {
 		gameTrack.render(gl);
 		gl.glPopMatrix();
 	}
-
 
 	private void renderCar(GL2 gl) {
 		double dx,dy,dz;
