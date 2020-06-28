@@ -37,6 +37,16 @@ public class BoundingSphere implements IRenderable {
         this.center = this.center.add(new Point(dx, dy, dz));
     }
 
+    public void rotateTheCenterToY(double degree) {
+        double cosTh , sinTh , newXPosition , newZPosition , degreeToRadian;
+        degreeToRadian = Math.toRadians(degree);
+        sinTh = Math.sin(degreeToRadian);
+        cosTh = Math.cos(degreeToRadian);
+        newXPosition = this.center.x*cosTh + this.center.z*sinTh;
+        newZPosition = this.center.x*(-sinTh) + this.center.z*cosTh;
+        this.center = new Point(newXPosition, this.center.y, newZPosition);
+    }
+
     @Override
     public void render(GL2 gl) {
         gl.glPushMatrix();
