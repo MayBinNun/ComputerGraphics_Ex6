@@ -5,6 +5,7 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
+import edu.cg.algebra.Point;
 import edu.cg.algebra.Vec;
 import edu.cg.models.BoundingSphere;
 import edu.cg.models.Car.F1Car;
@@ -14,6 +15,9 @@ import edu.cg.models.TrackSegment;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+
+import static edu.cg.models.Car.Specification.*;
+import static edu.cg.models.Car.Specification.F_BUMPER_LENGTH;
 
 /**
  * An OpenGL 3D Game.
@@ -159,6 +163,9 @@ public class NeedForSpeed implements GLEventListener {
 
     private void setupLights(GL2 gl) {
         if (isDayMode) {
+            gl.glDisable(GL2.GL_LIGHT0);
+            gl.glDisable(GL2.GL_LIGHT1);
+
             float[] colorOfSun = {1.0f, 1.0f, 1.0f, 1.0f};
             Vec sunDirection = new Vec(0.0, 1.0, 1.0).normalize();
             gl.glDisable(GL2.GL_LIGHT1);
@@ -173,25 +180,33 @@ public class NeedForSpeed implements GLEventListener {
             gl.glEnable(GL2.GL_LIGHT1);
         } else {
 
-            gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[]{0.35f, 0.35f, 0.4f, 1.0f}, 0);
+            gl.glDisable(GL2.GL_LIGHT1);
 
-            float[] hLight1 = new float[]{carCameraTranslation.x + 0.5f, (float) this.carInitialPosition[1] + 1.5f, this.carCameraTranslation.z -8.0f, 1.0f};
+            gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[]{1.0f, 1.0f, 1.0f, 1.0f}, 0);
+
+            float xSL = (float)this.carInitialPosition[0] +this.carCameraTranslation.x + (float)(4*(F_BUMPER_DEPTH + F_BUMPER_WINGS_DEPTH)) / 2;
+            float ySL = (float)this.carInitialPosition[1] +this.carCameraTranslation.y + (float)(4 * (F_BUMPER_WINGS_HEIGHT_1 / 2.5));
+            float zSL = (float)this.carInitialPosition[2] +this.carCameraTranslation.z  - (float)(4 * ((C_LENGTH / 2) + F_LENGTH)- (F_BUMPER_LENGTH / 2));
+
+            float[] hLight1 = new float[]{xSL,ySL,zSL, 1.0f};
             initialSpotLight(gl,GL2.GL_LIGHT0,hLight1);
-            float[] hLight2 = new float[]{ this.carCameraTranslation.x - 0.5f, (float)this.carInitialPosition[1] + 0.06f, this.carCameraTranslation.z + (float)this.carInitialPosition[2] -3.0f, 1.0f};
-            initialSpotLight(gl,GL2.GL_LIGHT1,hLight2);
             gl.glEnable(GL2.GL_LIGHT0);
+            float[] hLight2 = new float[]{-xSL,ySL,zSL, 1.0f};
+            initialSpotLight(gl,GL2.GL_LIGHT1,hLight2);
             gl.glEnable(GL2.GL_LIGHT1);
         }
 
     }
 
     private void initialSpotLight(GL2 gl, int light , float[] position ){
+        double angle = gameState.getCarRotation();
+        float[] direction = new float[]{((float)Math.sin(Math.toRadians(angle))), -2.f, -(float)Math.cos((Math.toRadians(angle)))};
         float[] lightColor = new float[]{0.8f, 0.8f, 0.8f, 1.0f};
         gl.glLightfv(light, GL2.GL_POSITION, position, 0);
         gl.glLightfv(light, GL2.GL_SPECULAR, lightColor, 0);
         gl.glLightfv(light, GL2.GL_DIFFUSE, lightColor, 0);
-        gl.glLightfv(light, GL2.GL_SPOT_DIRECTION, new float[]{0.0f, -1.0f, 0.0f}, 0);
-        gl.glLightf(light, GL2.GL_SPOT_CUTOFF, 90.0f);
+        gl.glLightfv(light, GL2.GL_SPOT_DIRECTION,direction, 0);
+        gl.glLightf(light, GL2.GL_SPOT_CUTOFF, 80.0f);
         gl.glEnable(light);
     }
 
