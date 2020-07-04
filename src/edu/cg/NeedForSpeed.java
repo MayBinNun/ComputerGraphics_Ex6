@@ -182,26 +182,22 @@ public class NeedForSpeed implements GLEventListener {
 
             gl.glDisable(GL2.GL_LIGHT1);
 
-            gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[]{1.0f, 1.0f, 1.0f, 1.0f}, 0);
+            float xSL = (float)this.carInitialPosition[0] +this.carCameraTranslation.x ;
+            float ySL = (float)this.carInitialPosition[1] +this.carCameraTranslation.y + 0.16f;
+            float zSL = (float)this.carInitialPosition[2] +this.carCameraTranslation.z - (float)(5 * ((C_LENGTH / 2) + F_LENGTH)- (F_BUMPER_LENGTH / 2))-1.5f;;
 
-            float xSL = (float)this.carInitialPosition[0] +this.carCameraTranslation.x + (float)(4*(F_BUMPER_DEPTH + F_BUMPER_WINGS_DEPTH)) / 2;
-            float ySL = (float)this.carInitialPosition[1] +this.carCameraTranslation.y + (float)(4 * (F_BUMPER_WINGS_HEIGHT_1 / 2.5));
-            float zSL = (float)this.carInitialPosition[2] +this.carCameraTranslation.z  - (float)(4 * ((C_LENGTH / 2) + F_LENGTH)- (F_BUMPER_LENGTH / 2));
-
-            float[] hLight1 = new float[]{xSL,ySL,zSL, 1.0f};
+            float[] hLight1 = new float[]{xSL+0.25f,ySL,zSL, 1.0f};
             initialSpotLight(gl,GL2.GL_LIGHT0,hLight1);
-            gl.glEnable(GL2.GL_LIGHT0);
-            float[] hLight2 = new float[]{-xSL,ySL,zSL, 1.0f};
+            float[] hLight2 = new float[]{xSL-0.25f,ySL,zSL, 1.0f};
             initialSpotLight(gl,GL2.GL_LIGHT1,hLight2);
-            gl.glEnable(GL2.GL_LIGHT1);
         }
 
     }
 
     private void initialSpotLight(GL2 gl, int light , float[] position ){
         double angle = gameState.getCarRotation();
-        float[] direction = new float[]{((float)Math.sin(Math.toRadians(angle))), -2.f, -(float)Math.cos((Math.toRadians(angle)))};
-        float[] lightColor = new float[]{0.8f, 0.8f, 0.8f, 1.0f};
+        float[] direction = new float[]{((float)Math.sin(Math.toRadians(angle))), -2.0f, -(float)Math.cos((Math.toRadians(angle)))};
+        float[] lightColor = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
         gl.glLightfv(light, GL2.GL_POSITION, position, 0);
         gl.glLightfv(light, GL2.GL_SPECULAR, lightColor, 0);
         gl.glLightfv(light, GL2.GL_DIFFUSE, lightColor, 0);
